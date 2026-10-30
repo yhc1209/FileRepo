@@ -26,6 +26,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # 自動處理 Backend 標籤與小寫轉換
+      - name: Extract Metadata for Backend
+        id: meta-backend
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/filerepo-backend
+          tags: |
+            type=raw,value=latest
+
       # 自動構建並推送後端 Docker Image
       - name: Build and Push Backend Image
         uses: docker/build-push-action@v5
@@ -33,7 +42,17 @@ jobs:
           context: ./backend/FileRepo.Api
           file: ./backend/FileRepo.Api/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/${{ github.repository_owner }}/filerepo-backend:latest
+          tags: ${{ steps.meta-backend.outputs.tags }}
+          labels: ${{ steps.meta-backend.outputs.labels }}
+
+      # 自動處理 Frontend 標籤與小寫轉換
+      - name: Extract Metadata for Frontend
+        id: meta-frontend
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/filerepo-frontend
+          tags: |
+            type=raw,value=latest
 
       # 自動構建並推送前端 Docker Image
       - name: Build and Push Frontend Image
@@ -42,4 +61,5 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/${{ github.repository_owner }}/filerepo-frontend:latest
+          tags: ${{ steps.meta-frontend.outputs.tags }}
+          labels: ${{ steps.meta-frontend.outputs.labels }}
