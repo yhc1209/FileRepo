@@ -1,0 +1,25 @@
+<div class="card">
+  <h2>檔案上傳 GUI</h2>
+  <div class="upload-box" style="margin-top: 15px;">
+    <input type="file" (change)="onFileSelected($event)" [disabled]="isUploading" style="margin-bottom: 12px; display: block;" />
+
+    <div *ngIf="selectedFile" style="margin-bottom: 12px; font-size: 0.9rem; color: #555;">
+      已選擇檔案：<strong>{{ selectedFile.name }}</strong> ({{ (selectedFile.size / 1024 / 1024) | number:'1.2-2' }} MB)
+    </div>
+
+    <button class="btn btn-primary" [disabled]="!selectedFile || isUploading" (click)="upload()">
+      {{ isUploading ? '上傳中...' : '開始上傳' }}
+    </button>
+
+    <div *ngIf="isUploading" style="margin-top: 15px;">
+      <div style="background-color: #eee; border-radius: 4px; overflow: hidden; height: 16px;">
+        <div [style.width.%]="progress" style="background-color: #2ecc71; height: 100%; transition: width 0.3s;"></div>
+      </div>
+      <span style="font-size: 0.85rem; color: #666; display: inline-block; margin-top: 4px;">{{ progress }}%</span>
+    </div>
+
+    <div *ngIf="message" style="margin-top: 10px; padding: 8px; border-radius: 4px;" [style.color]="message.includes('成功') ? '#27ae60' : '#c0392b'">
+      {{ message }}
+    </div>
+  </div>
+</div>

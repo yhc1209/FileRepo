@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend/FileRepo.Api
+      dockerfile: Dockerfile
+    container_name: filerepo-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - filerepo-data:/app/data
+      - filerepo-uploads:/app/uploads
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: filerepo-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: always
+
+volumes:
+  filerepo-data:
+  filerepo-uploads:

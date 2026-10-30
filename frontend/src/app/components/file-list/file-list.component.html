@@ -1,0 +1,52 @@
+<div class="card">
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <h2>已上傳檔案列表</h2>
+    <button class="btn btn-secondary" (click)="loadFiles()">重新整理</button>
+  </div>
+
+  <div *ngIf="isLoading" style="text-align: center; padding: 20px; color: #666;">
+    檔案載入中...
+  </div>
+
+  <div *ngIf="!isLoading && files.length === 0" style="text-align: center; padding: 30px; color: #888;">
+    目前尚無已上傳的檔案。
+  </div>
+
+  <div *ngIf="!isLoading && files.length > 0" style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+      <thead>
+        <tr style="background-color: #f8f9fa; text-align: left; border-bottom: 2px solid #dee2e6;">
+          <th style="padding: 12px;">檔名</th>
+          <th style="padding: 12px;">大小</th>
+          <th style="padding: 12px;">SHA-256 雜湊值</th>
+          <th style="padding: 12px;">上傳時間</th>
+          <th style="padding: 12px; text-align: right;">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let file of files" style="border-bottom: 1px solid #e9ecef;">
+          <td style="padding: 12px; font-weight: 500;">{{ file.fileName }}</td>
+          <td style="padding: 12px;">{{ formatFileSize(file.fileSizeBytes) }}</td>
+          <td style="padding: 12px;">
+            <code style="background: #eef2f5; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">
+              {{ file.sha256Hash.substring(0, 12) }}...
+            </code>
+            <button class="btn btn-secondary" style="padding: 2px 6px; font-size: 0.75rem; margin-left: 6px;" (click)="copyHash(file)">
+              {{ copiedHashId === file.id ? '已複製！' : '複製' }}
+            </button>
+          </td>
+          <td style="padding: 12px; color: #666; font-size: 0.85rem;">
+            {{ file.uploadDate | date:'yyyy-MM-dd HH:mm:ss' }}
+          </td>
+          <td style="padding: 12px; text-align: right; white-space: nowrap;">
+            <button class="btn btn-primary" style="margin-right: 6px;" (click)="downloadFile(file)">下載</button>
+            <button class="btn btn-secondary" style="margin-right: 6px;" (click)="copyDownloadInfo(file)">
+              {{ copiedInfoId === file.id ? '已複製 JSON' : '下載資訊' }}
+            </button>
+            <button class="btn btn-danger" (click)="deleteFile(file)">刪除</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

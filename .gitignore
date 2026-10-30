@@ -1,0 +1,45 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+ehthumbs.db
+Thumbs.db
+
+# Visual Studio / VS Code
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.idea/
+
+# .NET / C#
+bin/
+obj/
+out/
+*.nupkg
+*.snupkg
+
+# SQLite database & Uploaded files
+*.db
+*.db-shm
+*.db-wal
+/backend/FileRepo.Api/data/
+/backend/FileRepo.Api/uploads/
+
+# Node.js / Angular
+node_modules/
+dist/
+.angular/
+.npm
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker / Temporary
+.docker/

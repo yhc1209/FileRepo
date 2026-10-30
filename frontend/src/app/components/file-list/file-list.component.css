@@ -1,0 +1,4 @@
+/* Styles for file-list component */
+table tr:hover {
+  background-color: #f8fafc;
+}
