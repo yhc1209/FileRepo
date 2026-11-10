@@ -28,7 +28,6 @@ out/
 *.db
 *.db-shm
 *.db-wal
-/backend/FileRepo.Api/data/
 /backend/FileRepo.Api/uploads/
 
 # Node.js / Angular

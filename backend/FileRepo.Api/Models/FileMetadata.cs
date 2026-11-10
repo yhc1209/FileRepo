@@ -1,3 +1,5 @@
+using System;
+
 namespace FileRepo.Api.Models;
 
 public class FileMetadata
