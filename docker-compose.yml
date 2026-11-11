@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   backend:
+    image: filerepo-backend:${APP_VERSION:-latest}
     build:
       context: ./backend/FileRepo.Api
       dockerfile: Dockerfile
@@ -14,6 +15,7 @@ services:
     restart: always
 
   frontend:
+    image: filerepo-frontend:${APP_VERSION:-latest}
     build:
       context: ./frontend
       dockerfile: Dockerfile
