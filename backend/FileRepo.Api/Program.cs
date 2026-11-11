@@ -103,6 +103,23 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<FileDbContext>();
     db.Database.EnsureCreated();
+
+    // 如果現有 SQLite 資料庫是先前 EnsureCreated 建立（當時尚未有 Users 資料表），
+    // 補足 Users 資料表及索引，避免使用者在已存在的 db 上註冊時拋出 "no such table: Users"
+    db.Database.ExecuteSqlRaw(@"
+        CREATE TABLE IF NOT EXISTS ""Users"" (
+            ""Id"" TEXT NOT NULL CONSTRAINT ""PK_Users"" PRIMARY KEY,
+            ""Username"" TEXT NOT NULL,
+            ""Email"" TEXT NOT NULL,
+            ""PasswordHash"" TEXT NOT NULL,
+            ""CreatedAt"" TEXT NOT NULL,
+            ""IsTwoFactorEnabled"" INTEGER NOT NULL,
+            ""TwoFactorType"" INTEGER NOT NULL,
+            ""TwoFactorSecret"" TEXT NULL
+        );
+        CREATE UNIQUE INDEX IF NOT EXISTS ""IX_Users_Username"" ON ""Users"" (""Username"");
+        CREATE UNIQUE INDEX IF NOT EXISTS ""IX_Users_Email"" ON ""Users"" (""Email"");
+    ");
 }
 
 app.UseSwagger();

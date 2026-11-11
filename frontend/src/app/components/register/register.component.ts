@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { extractErrorMessage } from '../../utils/error-handler.util';
 
 @Component({
   selector: 'app-register',
@@ -57,7 +58,7 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.isLoading.set(false);
-        const msg = err.error?.message || '註冊失敗，請重試';
+        const msg = extractErrorMessage(err, '註冊失敗，請重試');
         this.errorMessage.set(msg);
       }
     });

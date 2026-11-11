@@ -33,15 +33,25 @@ public class AuthService : IAuthService
         var normalizedUsername = request.Username.Trim();
         var normalizedEmail = request.Email.Trim().ToLowerInvariant();
 
-        var existingUser = await _dbContext.Users
-            .AnyAsync(u => u.Username.ToLower() == normalizedUsername.ToLower() || u.Email.ToLower() == normalizedEmail);
-
-        if (existingUser)
+        var usernameExists = await _dbContext.Users
+            .AnyAsync(u => u.Username.ToLower() == normalizedUsername.ToLower());
+        if (usernameExists)
         {
             return new AuthResponse
             {
                 IsSuccess = false,
-                Message = "使用者名稱或電子郵件已被註冊"
+                Message = "此使用者名稱已被使用，請選擇其他名稱"
+            };
+        }
+
+        var emailExists = await _dbContext.Users
+            .AnyAsync(u => u.Email.ToLower() == normalizedEmail);
+        if (emailExists)
+        {
+            return new AuthResponse
+            {
+                IsSuccess = false,
+                Message = "此電子郵件已被註冊，請直接登入或使用其他郵件"
             };
         }
 

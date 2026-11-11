@@ -64,7 +64,7 @@ public class AuthServiceTests
     }
 
     [Fact]
-    public async Task RegisterAsync_DuplicateUsernameOrEmail_ShouldFail()
+    public async Task RegisterAsync_DuplicateUsername_ShouldFailWithUsernameMessage()
     {
         // Arrange
         using var db = CreateDbContext();
@@ -90,7 +90,37 @@ public class AuthServiceTests
 
         // Assert
         result.IsSuccess.Should().BeFalse();
-        result.Message.Should().Contain("已被註冊");
+        result.Message.Should().Contain("使用者名稱已被使用");
+    }
+
+    [Fact]
+    public async Task RegisterAsync_DuplicateEmail_ShouldFailWithEmailMessage()
+    {
+        // Arrange
+        using var db = CreateDbContext();
+        db.Users.Add(new User
+        {
+            Username = "user_one",
+            Email = "duplicate@example.com",
+            PasswordHash = "hash"
+        });
+        await db.SaveChangesAsync();
+
+        var sut = new AuthService(db, _tokenService, _passwordHasher);
+
+        var request = new RegisterRequest
+        {
+            Username = "user_two",
+            Email = "duplicate@example.com",
+            Password = "Password123!"
+        };
+
+        // Act
+        var result = await sut.RegisterAsync(request);
+
+        // Assert
+        result.IsSuccess.Should().BeFalse();
+        result.Message.Should().Contain("電子郵件已被註冊");
     }
 
     [Fact]

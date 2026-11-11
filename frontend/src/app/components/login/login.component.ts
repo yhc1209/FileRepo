@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { extractErrorMessage } from '../../utils/error-handler.util';
 
 @Component({
   selector: 'app-login',
@@ -51,7 +52,7 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading.set(false);
-        const msg = err.error?.message || '登入失敗，請確認帳號密碼';
+        const msg = extractErrorMessage(err, '登入失敗，請確認帳號密碼');
         this.errorMessage.set(msg);
       }
     });
@@ -79,7 +80,7 @@ export class LoginComponent {
       },
       error: (err) => {
         this.isLoading.set(false);
-        const msg = err.error?.message || '多因子驗證失敗，請重新確認代碼';
+        const msg = extractErrorMessage(err, '多因子驗證失敗，請重新確認代碼');
         this.errorMessage.set(msg);
       }
     });
