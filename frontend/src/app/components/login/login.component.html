@@ -1,0 +1,79 @@
+<div class="auth-card">
+  <h2>🔐 使用者登入</h2>
+  <p class="subtitle">登入以管理與下載您的個人檔案庫</p>
+
+  @if (errorMessage()) {
+    <div class="alert alert-error">
+      {{ errorMessage() }}
+    </div>
+  }
+
+  <!-- Step 1: Username & Password -->
+  @if (!isMfaStep()) {
+    <form (ngSubmit)="onLogin()">
+      <div class="form-group">
+        <label for="username">帳號或電子郵件</label>
+        <input
+          id="username"
+          type="text"
+          [(ngModel)]="usernameOrEmail"
+          name="usernameOrEmail"
+          placeholder="請輸入帳號或信箱"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">密碼</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          placeholder="請輸入密碼"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+        {{ isLoading() ? '登入中...' : '登入' }}
+      </button>
+
+      <div class="auth-footer">
+        還沒有帳號？ <a routerLink="/register">立即註冊</a>
+      </div>
+    </form>
+  }
+
+  <!-- Step 2: MFA Step (Future extensible, ready now) -->
+  @if (isMfaStep()) {
+    <form (ngSubmit)="onVerifyMfa()" class="mfa-form">
+      <div class="mfa-notice">
+        ℹ️ 此帳號已啟用多因子驗證 (MFA)，請輸入 Authenticator App 或驗證信中的 6 位數驗證碼。
+      </div>
+
+      <div class="form-group">
+        <label for="twoFactorCode">6 位數驗證碼</label>
+        <input
+          id="twoFactorCode"
+          type="text"
+          maxlength="6"
+          [(ngModel)]="twoFactorCode"
+          name="twoFactorCode"
+          placeholder="例如 123456"
+          required
+          autofocus
+        />
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading()">
+          {{ isLoading() ? '驗證中...' : '確認驗證' }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="cancelMfa()">
+          返回帳密登入
+        </button>
+      </div>
+    </form>
+  }
+</div>
