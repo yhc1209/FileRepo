@@ -1,9 +1,23 @@
 <div class="container">
+  <nav class="navbar">
+    <a routerLink="/" class="brand">📦 FileRepo</a>
+    <div class="nav-actions">
+      @if (authService.isAuthenticated()) {
+        <span class="user-greeting">👋 你好，{{ authService.currentUser()?.username }}</span>
+        <button class="btn-logout" (click)="logout()">登出</button>
+      } @else {
+        <div class="auth-links">
+          <a routerLink="/login">登入</a>
+          <a routerLink="/register">註冊</a>
+        </div>
+      }
+    </div>
+  </nav>
+
   <header>
     <h1>📦 檔案儲存庫 FileRepo</h1>
-    <p>ASP.NET Core 9 + Angular 19 檔案上傳、瀏覽與下載系統</p>
+    <p>ASP.NET Core + Angular 檔案上傳、瀏覽與下載系統 (含身份驗證)</p>
   </header>
 
-  <app-file-upload (uploadSuccess)="onUploadSuccess()"></app-file-upload>
-  <app-file-list></app-file-list>
+  <router-outlet></router-outlet>
 </div>
